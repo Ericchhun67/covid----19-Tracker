@@ -1,0 +1,66 @@
+
+
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>COVID-19 Tracker - Global Stats</title>
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Global COVID-19 Statistics</h1>
+
+        <!-- Global Stats Overview -->
+        <div class="stats-cards">
+            <div class="card cases">
+                <h2>Total Cases</h2>
+                <p>{{ stats['cases'] }}</p>
+            </div>
+            <div class="card deaths">
+                <h2>Total Deaths</h2>
+                <p>{{ stats['deaths'] }}</p>
+            </div>
+            <div class="card recovered">
+                <h2>Total Recovered</h2>
+                <p>{{ stats['recovered'] }}</p>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+            <h2>Cases vs Deaths vs Recovered</h2>
+            <p> Cases: {{ stats['cases'] }} | Deaths: {{ stats['deaths'] }} | Recovered: {{ stats['recovered'] }} </p>
+            <canvas id="globalChart"></canvas>
+            <p> Data Source: <a href="https://disease.sh/" target="_blank">disease.sh</a> </p>
+        </div>
+        
+        <div class="chart-container">
+        <h2>Global Doughnut Chart</h2>
+        <p> new cases today: {{ stats['todayCases'] }} | new deaths today: {{ stats['todayDeaths'] }} | new recovered today: {{ stats['todayRecovered'] }} </p>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <canvas id="globalChartDoughnut"></canvas>
+    </div>
+
+        <!-- Form to Check Country Data -->
+        <div class="country-form">
+            <h2>Check Country Statistics</h2>
+            <form method="POST" action="{{ url_for('country') }}">
+                <input type="text" name="country" placeholder="Enter country name (e.g., USA)" required>
+                <button type="submit">Get Stats</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JS for Charts -->
+  <script>
+  const covidData = JSON.parse('{{ stats | tojson | safe }}');
+  console.log(covidData.cases);
+</script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+</body>
+</html>

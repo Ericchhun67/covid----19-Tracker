@@ -1,0 +1,72 @@
+<!-- templates/country.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>COVID-19 Tracker - {{ country }}</title>
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!--
+            Country specific stats page
+        
+        -->
+        <h1>COVID-19 Stats for {{ country|title }}</h1>
+
+        <!-- Country Stats Overview -->
+        <div class="stats-cards">
+            <div class="card cases">
+                <h2>Total Cases</h2>
+                <p>{{ stats['cases'] }}</p>
+            </div>
+            <div class="card deaths">
+                <h2>Total Deaths</h2>
+                <p>{{ stats['deaths'] }}</p>
+            </div>
+            <div class="card recovered">
+                <h2>Total Recovered</h2>
+                <p>{{ stats['recovered'] }}</p>
+                <p> Active Cases: {{ stats['active'] }} </p>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+            <h2>Cases vs Deaths vs Recovered</h2>
+             <p> Cases: {{ stats['cases'] }} | Deaths: {{ stats['deaths'] }} | Recovered: {{ stats['recovered'] }} </p>
+            <canvas id="countryChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+        <h2>{{ country|title }} Doughnut Chart</h2>
+        <canvas id="countryChartDoughnut"></canvas>
+    </div>
+        
+
+        <!-- Form to Check Another Country -->
+        <div class="country-form">
+            <h2>Check Another Country</h2>
+            <form method="POST" action="{{ url_for('country') }}">
+                <input type="text" name="country" placeholder="Enter country name (e.g., India)" required>
+                <button type="submit">Get Stats</button>
+            </form>
+        </div>
+
+        <!-- Back to Global -->
+        <div class="back-link">
+            <a href="{{ url_for('index') }}">← Back to Global Stats</a>
+        </div>
+    </div>
+
+    <!-- Pass data to JS -->
+    <script type="application/javascript">
+        const covidData = '{{ stats | tojson }}';
+        console.log("Country Data:", covidData);
+    </script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+</body>
+</html>
